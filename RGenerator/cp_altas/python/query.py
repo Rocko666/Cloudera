@@ -8,7 +8,7 @@ from datetime import datetime
 import os
 from pyspark.sql.functions import col, substring_index
 
-
+##
 ########################################## PROCESO ALTAS BAJAS INVOLUNTARIAS ########################################################
 
 def part_otc_t_churn_sp2():

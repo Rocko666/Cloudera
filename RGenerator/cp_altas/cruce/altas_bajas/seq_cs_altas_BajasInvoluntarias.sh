@@ -1,26 +1,27 @@
 ##########################################################################
 # MODIFICACIONES														 #
 # FECHA  		AUTOR     		DESCRIPCION MOTIVO						 #
-# 2022-12-27	Brigitte Balon Se migra importacion a spark              #								
+# 2022-12-27	Brigitte Balon Se migra importacion a spark              #
+# 2023-01-24    Cristian Ortiz Se prueba en Cloudera lab				 #				
 ##########################################################################
 
-ENTIDAD=D_BIGCSALTBAJINV0391
+ENTIDAD=BIGCSALTBAJINV0391
 fecha_eject=$1
 
 #PARAMETROS DE LA ENTIDAD
-RUTA=`mysql -N  <<<"select valor from params_des where entidad = '"$ENTIDAD"' AND parametro = 'RUTA';"` 
-HIVEDB=`mysql -N  <<<"select valor from params_des where entidad = '"$ENTIDAD"'  AND parametro = 'HIVEDB';"`
-VAL_MASTER=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_MASTER';"`
-VAL_DRIVER_MEMORY=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_DRIVER_MEMORY';"`
-VAL_EXECUTOR_MEMORY=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_EXECUTOR_MEMORY';"`
-VAL_NUM_EXECUTORS=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_NUM_EXECUTORS';"`
-VAL_EXECUTOR_CORES=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_EXECUTOR_CORES';"`
+RUTA=`mysql -N  <<<"select valor from params where entidad = '"$ENTIDAD"' AND parametro = 'RUTA';"` 
+HIVEDB=`mysql -N  <<<"select valor from params where entidad = '"$ENTIDAD"'  AND parametro = 'HIVEDB';"`
+VAL_MASTER=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_MASTER';"`
+VAL_DRIVER_MEMORY=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_DRIVER_MEMORY';"`
+VAL_EXECUTOR_MEMORY=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_EXECUTOR_MEMORY';"`
+VAL_NUM_EXECUTORS=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_NUM_EXECUTORS';"`
+VAL_EXECUTOR_CORES=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_EXECUTOR_CORES';"`
 
-#PARAMETROS GENERICOS PARA IMPORTACIONES CON SPARK OBTENIDOS DE LA TABLA params_des
-VAL_RUTA_SPARK=`mysql -N  <<<"select valor from params_des where ENTIDAD = 'D_SPARK_GENERICO' AND parametro = 'VAL_RUTA_SPARK';"`
+#PARAMETROS GENERICOS PARA IMPORTACIONES CON SPARK OBTENIDOS DE LA TABLA params
+VAL_RUTA_SPARK=`mysql -N  <<<"select valor from params where ENTIDAD = 'SPARK_GENERICO' AND parametro = 'VAL_RUTA_SPARK';"`
 
-VAL_CADENA_JDBC=`mysql -N  <<<"select valor from params_des where ENTIDAD = 'D_PARAM_BEELINE' AND parametro = 'VAL_CADENA_JDBC';"`
-VAL_USER=`mysql -N  <<<"select valor from params_des where ENTIDAD = 'D_PARAM_BEELINE' AND parametro = 'VAL_USER';"`
+VAL_CADENA_JDBC=`mysql -N  <<<"select valor from params where ENTIDAD = 'PARAM_BEELINE' AND parametro = 'VAL_CADENA_JDBC';"`
+VAL_USER=`mysql -N  <<<"select valor from params where ENTIDAD = 'PARAM_BEELINE' AND parametro = 'VAL_USER';"`
 
 fecha_hoy=`date '+%Y%m%d'`
 ini_fecha=`date '+%Y%m%d%H%M%S'`
@@ -42,8 +43,8 @@ vTabla1=$HIVEDB".otc_t_bajas_involuntarias"
 vTabla2=$HIVEDB".otc_t_2tmp_bajas_involuntarias"
 
 ##bba
-vTabla1=$HIVEDB".otc_t_bajas_involuntarias_prycldr"
-vTabla2=$HIVEDB".otc_t_2tmp_bajas_involuntarias_prycldr"
+vTabla1=$HIVEDB".otc_t_bajas_involuntarias"
+vTabla2=$HIVEDB".otc_t_2tmp_bajas_involuntarias"
 
 
 echo "==== INICIA PROCESO SPARK ====" > $log_Extraccion

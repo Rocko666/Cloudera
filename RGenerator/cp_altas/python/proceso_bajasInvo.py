@@ -17,7 +17,7 @@ from messages import *
 from functions import *
 from create import *
 
-## STEP 1: Definir variables o constantes
+## STEP 1: Definir variables o constantes ##
 vLogInfo='INFO:'
 vLogError='ERROR:'
 
@@ -48,6 +48,8 @@ vBeelineUser=parametros.val_user
 spark = SparkSession \
     .builder \
     .config("hive.exec.dynamic.partition.mode", "nonstrict") \
+    .config("hive.enforce.bucketing", "false")\
+	.config("hive.enforce.sorting", "false")\
     .appName(vEntidad) \
     .enableHiveSupport() \
     .getOrCreate()
