@@ -1,18 +1,18 @@
 #!/bin/bash
 #########################################################################################################
-# NOMBRE: extraccion_fact_billrequestattributes.sh     	      								            #
+# NOMBRE: extraccion_fact_custproductattrdetails.sh    	      								            #
 # DESCRIPCION:																							#
-#  Shell que realiza el proceso de importacion la tabla billrequestattributes de Oracle a la tabla		#
-#  otc_t_billrequestattributes en Hive																	#
+#  Shell que realiza el proceso de importacion la tabla custproductattrdetails de Oracle a la tabla		#
+#  otc_t_contact en Hive																				#
 # AUTOR: Karina Castro - Softconsulting                            										#
-# FECHA CREACION: 2022-11-11   																			#
+# FECHA CREACION: 2022-11-08   																			#
 # PARAMETROS DEL SHELL                            													    #
 # N/A																									#						
 #########################################################################################################
 # MODIFICACIONES																						#
 # FECHA  		AUTOR     		DESCRIPCION MOTIVO														#
 #########################################################################################################
-ENTIDAD=OTC_T_BILLREQUESTATTRIBUTES
+ENTIDAD=OTC_T_CUSTPRODUCTATTRDETAILS
 
 #PARAMETROS GENERICOS PARA IMPORTACIONES CON SPARK OBTENIDOS DE LA TABLA params
 VAL_KINIT=`mysql -N  <<<"select valor from params where ENTIDAD = 'SPARK_GENERICO' AND parametro = 'VAL_KINIT';"`
@@ -20,7 +20,7 @@ $VAL_KINIT
 VAL_RUTA_SPARK=`mysql -N  <<<"select valor from params where ENTIDAD = 'SPARK_GENERICO' AND parametro = 'VAL_RUTA_SPARK';"`
 VAL_RUTA_LIB=`mysql -N  <<<"select valor from params where ENTIDAD = 'SPARK_GENERICO' AND parametro = 'VAL_RUTA_LIB';"`
 VAL_RUTA_IMP_SPARK=`mysql -N  <<<"select valor from params where ENTIDAD = 'SPARK_GENERICO' AND parametro = 'VAL_RUTA_IMP_SPARK';"`
-VAL_NOM_IMP_SPARK=`mysql -N  <<<"select valor from params where ENTIDAD = 'SPARK_GENERICO' AND parametro = 'VAL_NOM_IMP_SPARK';"`
+VAL_NOM_IMP_SPARK2=`mysql -N  <<<"select valor from params where ENTIDAD = 'SPARK_GENERICO' AND parametro = 'VAL_NOM_IMP_SPARK2';"`
 VAL_NOM_JAR_ORC_11=`mysql -N  <<<"select valor from params where ENTIDAD = 'SPARK_GENERICO' AND parametro = 'VAL_NOM_JAR_ORC_11';"`
 
 #PARAMETROS PROPIOS DEL PROCESO OBTENIDOS DE LA TABLA params
@@ -32,20 +32,18 @@ VAL_MASTER=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' 
 VAL_DRIVER_MEMORY=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_DRIVER_MEMORY';"`
 VAL_EXECUTOR_MEMORY=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_EXECUTOR_MEMORY';"`
 VAL_NUM_EXECUTORS=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_NUM_EXECUTORS';"`
-
-#
-TDDB_RBM=`mysql -N  <<<"select valor from params where ENTIDAD = 'SPARK_GENERICO' AND parametro = 'TDDB_RBM';"`
-TDHOST_RBM=`mysql -N  <<<"select valor from params where ENTIDAD = 'SPARK_GENERICO' AND parametro = 'TDHOST_RBM';"`
-TDPASS_RBM=`mysql -N  <<<"select valor from params where ENTIDAD = 'SPARK_GENERICO'  AND parametro = 'TDPASS_RBM';"`
-TDPORT_RBM=`mysql -N  <<<"select valor from params where ENTIDAD = 'SPARK_GENERICO'  AND parametro = 'TDPORT_RBM';"`
-TDSERVICE_RBM=`mysql -N  <<<"select valor from params where ENTIDAD = 'SPARK_GENERICO'  AND parametro = 'TDSERVICE_RBM';"`
-TDUSER_RBM=`mysql -N  <<<"select valor from params where ENTIDAD = 'SPARK_GENERICO'  AND parametro = 'TDUSER_RBM';"`
+TDDB_RBM=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'TDDB_RBM';"`
+TDHOST_RBM=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'TDHOST_RBM';"`
+TDPASS_RBM=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"'  AND parametro = 'TDPASS_RBM';"`
+TDPORT_RBM=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"'  AND parametro = 'TDPORT_RBM';"`
+TDSERVICE_RBM=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"'  AND parametro = 'TDSERVICE_RBM';"`
+TDUSER_RBM=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"'  AND parametro = 'TDUSER_RBM';"`
 
 #PARAMETROS CALCULADOS Y AUTOGENERADOS
 VAL_JDBCURL=jdbc:oracle:thin:@$TDHOST_RBM:$TDPORT_RBM/$TDSERVICE_RBM
 VAL_DIA=`date '+%Y%m%d'` 
 VAL_HORA=`date '+%H%M%S'` 
-VAL_LOG=$VAL_RUTA/logs/OTC_T_BILLREQUESTATTRIBUTES_$VAL_DIA$VAL_HORA.log
+VAL_LOG=$VAL_RUTA/logs/OTC_T_CUSTPRODUCTATTRDETAILS_$VAL_DIA$VAL_HORA.log
 
 #VALIDACION DE PARAMETROS INICIALES
 if [ -z "$ENTIDAD" ] || 
@@ -53,7 +51,7 @@ if [ -z "$ENTIDAD" ] ||
 [ -z "$VAL_RUTA_SPARK" ] || 
 [ -z "$VAL_RUTA_LIB" ] || 
 [ -z "$VAL_RUTA_IMP_SPARK" ] || 
-[ -z "$VAL_NOM_IMP_SPARK" ] || 
+[ -z "$VAL_NOM_IMP_SPARK2" ] || 
 [ -z "$VAL_NOM_JAR_ORC_11" ] || 
 [ -z "$TDDB_RBM" ] || 
 [ -z "$TDHOST_RBM" ] || 
@@ -61,7 +59,7 @@ if [ -z "$ENTIDAD" ] ||
 [ -z "$TDPORT_RBM" ] || 
 [ -z "$TDSERVICE_RBM" ] || 
 [ -z "$TDUSER_RBM" ] || 
-[ -z "$VAL_RUTA" ]  || 
+[ -z "$VAL_RUTA" ] || 
 [ -z "$HIVEDB" ] || 
 [ -z "$HIVETABLE" ] || 
 [ -z "$VAL_TIPO_CARGA" ] || 
@@ -75,19 +73,19 @@ if [ -z "$ENTIDAD" ] ||
 	exit 1
 fi
 
-echo "==== Inicia ejecucion del proceso OTC_T_BILLREQUESTATTRIBUTES ===="`date '+%Y%m%d%H%M%S'` >> $VAL_LOG
+echo "==== Inicia ejecucion del proceso OTC_T_CUSTPRODUCTATTRDETAILS ===="`date '+%Y%m%d%H%M%S'` >> $VAL_LOG
 echo "Los parametros del proceso son los siguientes:" >> $VAL_LOG
 echo "Conexion a Oracle: $VAL_JDBCURL" >> $VAL_LOG
 
 #REALIZA EL LLAMADO EL ARCHIVO SPARK QUE REALIZA LA EXTRACCION DE LA INFORMACION DE ORACLE A HIVE
 $VAL_RUTA_SPARK \
 --master $VAL_MASTER \
---name OTC_T_BILLREQUESTATTRIBUTES \
+--name OTC_T_CUSTPRODUCTATTRDETAILS \
 --driver-memory $VAL_DRIVER_MEMORY \
 --executor-memory $VAL_EXECUTOR_MEMORY \
 --num-executors $VAL_NUM_EXECUTORS \
 --jars $VAL_RUTA_LIB/$VAL_NOM_JAR_ORC_11 \
-$VAL_RUTA_IMP_SPARK/$VAL_NOM_IMP_SPARK \
+$VAL_RUTA_IMP_SPARK/$VAL_NOM_IMP_SPARK2 \
 --vclass=oracle.jdbc.driver.OracleDriver \
 --vjdbcurl=$VAL_JDBCURL \
 --vusuariobd=$TDDB_RBM \
@@ -95,15 +93,15 @@ $VAL_RUTA_IMP_SPARK/$VAL_NOM_IMP_SPARK \
 --vhivebd=$HIVEDB \
 --vtablahive=$HIVETABLE \
 --vtipocarga=$VAL_TIPO_CARGA \
---vfilesql=$VAL_RUTA/sql/otc_t_billrequestattributes.sql &>> $VAL_LOG
+--vfilesql=$VAL_RUTA/sql/otc_t_custproductattrdetails.sql &>> $VAL_LOG
 
 #VALIDA EJECUCION DEL ARCHIVO SPARK
 error_spark=`egrep 'An error occurred|Caused by:|pyspark.sql.utils.ParseException|AnalysisException:|NameError:|IndentationError:|Permission denied:|ValueError:|ERROR:|error:|unrecognized arguments:|No such file or directory|Failed to connect|Could not open client' $VAL_LOG | wc -l`
 if [ $error_spark -eq 0 ];then
-echo "==== OK - La ejecucion del archivo spark spark_import.py es EXITOSO ===="`date '+%H%M%S'` >> $VAL_LOG
+echo "==== OK - La ejecucion del archivo spark spark_import2.py es EXITOSO ===="`date '+%H%M%S'` >> $VAL_LOG
 else
-echo "==== ERROR: - En la ejecucion del archivo spark spark_import.py ====" >> $VAL_LOG
+echo "==== ERROR: - En la ejecucion del archivo spark spark_import2.py ====" >> $VAL_LOG
 exit 1
 fi
 
-echo "==== Finaliza ejecucion del proceso OTC_T_BILLREQUESTATTRIBUTES ===="`date '+%Y%m%d%H%M%S'` >> $VAL_LOG
+echo "==== Finaliza ejecucion del proceso OTC_T_CUSTPRODUCTATTRDETAILS ===="`date '+%Y%m%d%H%M%S'` >> $VAL_LOG
