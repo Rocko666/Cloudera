@@ -94,7 +94,7 @@ $VAL_RUTA_IMP_SPARK/$VAL_NOM_IMP_SPARK \
 --vhivebd=$HIVEDB \
 --vtablahive=$HIVETABLE \
 --vtipocarga=$VAL_TIPO_CARGA \
---vfilesql=$VAL_RUTA/sql/otc_t_account.sql &>> $VAL_LOG
+--vfilesql=$VAL_RUTA/sql/otc_t_account.sql 2>&1 &>> $VAL_LOG
 
 #VALIDA EJECUCION DEL ARCHIVO SPARK
 error_spark=`egrep 'An error occurred|Caused by:|pyspark.sql.utils.ParseException|AnalysisException:|NameError:|IndentationError:|Permission denied:|ValueError:|ERROR:|error:|unrecognized arguments:|No such file or directory|Failed to connect|Could not open client' $VAL_LOG | wc -l`

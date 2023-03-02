@@ -99,28 +99,28 @@ VAL_FECHA_INI_MES_ANT_PROC3=`date '+%Y%m01' -d "$VAL_FEC_INI_MES -5 month"` #Fec
 VAL_LOG=$VAL_RUTA/log/OTC_T_LINEAS_ACTIVAS_$HORA.log
 
 #SE MUESTRA LA HORA DE INICIACION DEL PROCESO Y EL PARAMETRO RECIBIDO
-echo "Hora: $HORA" &>> $VAL_LOG
-echo "Fecha Proceso: $VAL_FECHA_PROCESO" &>> $VAL_LOG
-echo "Fecha inicio del mes de ejecucion: $VAL_FEC_INI_MES" &>> $VAL_LOG
-echo "Fecha inicio del proceso: $VAL_FECHA_INI_PROC" &>> $VAL_LOG
-echo "Fecha inicio del mes de proceso: $VAL_FECHA_INI_MES_PROC" &>> $VAL_LOG
-echo "Anio y mes de la fecha inicio de proceso: $VAL_ANIO_MES_INI_PROC_DATE" &>> $VAL_LOG
-echo "Fecha fin del mes proceso: $VAL_FECHA_FIN_MES_PROC" &>> $VAL_LOG
-echo "Fecha inicio del mes anterior proceso menos 1: $VAL_FECHA_INI_MES_ANT_PROC" &>> $VAL_LOG
-echo "Fecha inicio del mes anterior proceso menos 2: $VAL_FECHA_INI_MES_ANT_PROC1" &>> $VAL_LOG
-echo "Fecha inicio del mes anterior proceso menos 3: $VAL_FECHA_INI_MES_ANT_PROC2" &>> $VAL_LOG
-echo "Fecha inicio del mes anterior proceso menos 4: $VAL_FECHA_INI_MES_ANT_PROC3" &>> $VAL_LOG
+echo "Hora: $HORA" 2>&1 &>> $VAL_LOG
+echo "Fecha Proceso: $VAL_FECHA_PROCESO" 2>&1 &>> $VAL_LOG
+echo "Fecha inicio del mes de ejecucion: $VAL_FEC_INI_MES" 2>&1 &>> $VAL_LOG
+echo "Fecha inicio del proceso: $VAL_FECHA_INI_PROC" 2>&1 &>> $VAL_LOG
+echo "Fecha inicio del mes de proceso: $VAL_FECHA_INI_MES_PROC" 2>&1 &>> $VAL_LOG
+echo "Anio y mes de la fecha inicio de proceso: $VAL_ANIO_MES_INI_PROC_DATE" 2>&1 &>> $VAL_LOG
+echo "Fecha fin del mes proceso: $VAL_FECHA_FIN_MES_PROC" 2>&1 &>> $VAL_LOG
+echo "Fecha inicio del mes anterior proceso menos 1: $VAL_FECHA_INI_MES_ANT_PROC" 2>&1 &>> $VAL_LOG
+echo "Fecha inicio del mes anterior proceso menos 2: $VAL_FECHA_INI_MES_ANT_PROC1" 2>&1 &>> $VAL_LOG
+echo "Fecha inicio del mes anterior proceso menos 3: $VAL_FECHA_INI_MES_ANT_PROC2" 2>&1 &>> $VAL_LOG
+echo "Fecha inicio del mes anterior proceso menos 4: $VAL_FECHA_INI_MES_ANT_PROC3" 2>&1 &>> $VAL_LOG
 
 #VALIDACION DE PARAMETROS INICIALES
 if [ -z "$VAL_FECHA_PROCESO" ] 
 || [ -z "$VAL_COLA_EJECUCION" ] 
 || [ -z "$VAL_RUTA" ] ; then
-  echo "[ERROR] uno de los parametros esta vacio o nulo"&>> $VAL_LOG
+  echo "[ERROR] uno de los parametros esta vacio o nulo"2>&1 &>> $VAL_LOG
   exit 1
 fi
   
 #PASO 3: HACE LA EJECUCION DEL PROCESO PARA EL REPORTE ARCOTEL LINEAS ACTIVAS
-echo "==== Inicia ejecucion del proceso GENERACION DE REPORTE ARCOTEL LINEAS ACTIVAS  ===="`date '+%Y%m%d%H%M%S'` &>> $VAL_LOG
+echo "==== Inicia ejecucion del proceso GENERACION DE REPORTE ARCOTEL LINEAS ACTIVAS  ===="`date '+%Y%m%d%H%M%S'` 2>&1 &>> $VAL_LOG
 
 #SPARK DE ORACLE A HIVE
 $VAL_RUTA_SPARK \
@@ -164,14 +164,14 @@ $VAL_RUTA/python/$VAL_PYTHON \
 --vfecha_ini_mes_ant2=$VAL_FECHA_INI_MES_ANT_PROC2 \
 --vfecha_ini_mes_ant3=$VAL_FECHA_INI_MES_ANT_PROC3 \
 --vesquematmp=$VAL_ESQUEMA_TMP \
---vesquemarpt=$VAL_ESQUEMA_RPT &&>> $VAL_LOG
+--vesquemarpt=$VAL_ESQUEMA_RPT &2>&1 &>> $VAL_LOG
 
 #VALIDA EJECUCION DEL ARCHIVO SPARK
 error_spark=`egrep 'SyntaxError:|pyodbc.InterfaceError:|Caused by:|pyspark.sql.utils.ParseException|AnalysisException:|NameError:|IndentationError:|Permission denied:|ValueError:|ERROR:|error:|unrecognized arguments:|No such file or directory|Failed to connect|Could not open client|not found' $VAL_LOG | wc -l`
 if [ $error_spark -eq 0 ];then
-	echo "==== OK - PROCESO REPORTE ARCOTEL LINEAS ACTIVAS ===="`date '+%H%M%S'` &>> $VAL_LOG
+	echo "==== OK - PROCESO REPORTE ARCOTEL LINEAS ACTIVAS ===="`date '+%H%M%S'` 2>&1 &>> $VAL_LOG
 	else
-	echo "==== ERROR - PROCESO REPORTE ARCOTEL LINEAS ACTIVAS ====" &>> $VAL_LOG
+	echo "==== ERROR - PROCESO REPORTE ARCOTEL LINEAS ACTIVAS ====" 2>&1 &>> $VAL_LOG
 	exit 1
 fi
 

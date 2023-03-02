@@ -72,7 +72,7 @@ $RUTA/python/proceso_bajasInvo.py \
 --vTabla2=$vTabla2 \
 --val_cadena_jdbc=$VAL_CADENA_JDBC \
 --val_user=$VAL_USER \
---vTabla1=$vTabla1 &>> $log_Extraccion
+--vTabla1=$vTabla1 2>&1 &>> $log_Extraccion
 
 error_spark=`egrep 'error: argument|invalid syntax|An error occurred|Caused by:|cannot resolve|Non-ASCII character|UnicodeEncodeError:|can not accept object|pyspark.sql.utils.ParseException|AnalysisException:|NameError:|IndentationError:|Permission denied:|ValueError:|ERROR:|error:|unrecognized arguments:|No such file or directory|Failed to connect|Could not open client|ImportError|SyntaxError' $log_Extraccion | wc -l`
 if [ $error_spark -eq 0 ];then
