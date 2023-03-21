@@ -1,9 +1,27 @@
 # Cruce de Informacion Grandes Cuentas
 # Realizado: Luis Fernando Llanganate
 # FEcha: 10-10-2022
+## Basic Libraries
+import sys
+import re
+import pyspark
+import os.path
+import shutil
+import numpy as np
+import pandas as pd
+import argparse
+from os import path
+from datetime import datetime, timedelta
 
-# encoding=utf8
-from configuracion.config import *
+## Spark libraries
+import pyspark.sql.functions as F
+from pyspark.sql import Window
+from pyspark.sql.functions import col, to_timestamp, lag, lead, first, last, rank, unix_timestamp, concat, lit, expr
+from pyspark.sql.functions import to_date, date_format
+from pyspark.sql import SQLContext, SparkSession, HiveContext
+from pyspark import SparkConf, SparkContext
+from pyspark.ml.feature import QuantileDiscretizer, Bucketizer
+from pyspark.sql.types import StringType
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -15,6 +33,7 @@ parser.add_argument('--fechafin', required=True, type=str)
 parser.add_argument('--tabla1', required=True, type=str)
 parser.add_argument('--tabla2', required=True, type=str)
 parser.add_argument('--tabla3', required=True, type=str)
+parser.add_argument('--queue', required=True, type=str)
 
 parametros = parser.parse_args()
 vRuta=parametros.ruta
@@ -22,17 +41,31 @@ vFechafin=parametros.fechafin
 VTablaT1=parametros.tabla1
 VTablaT2=parametros.tabla2
 VTablaT3=parametros.tabla3
-
+VQueue=parametros.queue
 
 print(VTablaT1)
 print(VTablaT2)
 print(VTablaT3)
 print(vRuta)
 print(vFechafin)
+print(VQueue)
 
-sc = SparkContext.getOrCreate(conf=config)
+spark = SparkSession\
+	.builder\
+	.enableHiveSupport() \
+	.config("spark.sql.broadcastTimeout", "36000") \
+	.config("hive.exec.dynamic.partition", "true") \
+	.config("hive.exec.dynamic.partition.mode", "nonstrict") \
+	.config("spark.yarn.queue", VQueue) \
+	.config("hive.enforce.bucketing", "false") \
+	.config("hive.enforce.sorting", "false") \
+    .config("spark.driver.maxResultSize", "30g") \
+	.getOrCreate()
+sc = spark.sparkContext
 sc.setLogLevel("ERROR")
-spark = SparkSession.builder.config(conf=config).enableHiveSupport().getOrCreate()
+app_id = spark._sc.applicationId
+print("INFO: Mostrar application_id => {}".format(str(app_id)))
+
 sqlContext = SQLContext(spark)
 hc = HiveContext(spark)   
 
@@ -80,5 +113,4 @@ finally:
         print("============CRUCE DE INFORMACION REALIZADO CON EXITO=======" + vFechafin ) 
         sqlContext.clearCache()
         sc.stop()
-        exit(1)
 
