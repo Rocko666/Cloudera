@@ -88,9 +88,9 @@ echo "Se inicia proceso de carga de datos desde PySpark"  2>&1 &>> $VAL_LOG
 
 #SPARK DE ORACLE A HIVE
 $VAL_RUTA_SPARK \
---conf spark.ui.enabled=false \
+ 
 --conf spark.shuffle.service.enabled=false \
---conf spark.dynamicAllocation.enabled=false \
+
 --master $VAL_MASTER \
 --executor-memory $VAL_EXECUTOR_MEMORY \
 --num-executors $VAL_NUM_EXECUTORS \

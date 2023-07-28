@@ -108,9 +108,9 @@ echo "Se inicia proceso de carga de datos desde PySpark de tablas temporales "  
 #SPARK DE ORACLE A HIVE CARGA DE LAS TABLAS TEMPORALES
 
 $VAL_RUTA_SPARK \
---conf spark.ui.enabled=false \
+ 
 --conf spark.shuffle.service.enabled=false \
---conf spark.dynamicAllocation.enabled=false \
+
 --master $VAL_MASTER \
 --executor-memory $VAL_EXECUTOR_MEMORY \
 --num-executors $VAL_NUM_EXECUTORS \

@@ -87,9 +87,9 @@ echo "Se inicia proceso de carga de datos desde PySpark : CARGA DE LA TABLE: OTC
 #SPARK DE ORACLE A HIVE CARGA DE LA TABLE: OTC_V_PARTNER_SIM
 
 $VAL_RUTA_SPARK \
---conf spark.ui.enabled=false \
+ 
 --conf spark.shuffle.service.enabled=false \
---conf spark.dynamicAllocation.enabled=false \
+
 --master $VAL_MASTER \
 --executor-memory $VAL_EXECUTOR_MEMORY \
 --num-executors $VAL_NUM_EXECUTORS \
@@ -127,9 +127,9 @@ echo "Se inicia proceso de carga de datos desde PySpark : CARGA DE LA TABLE: OTC
 #SPARK DE ORACLE A HIVE CARGA DE LA TABLE: OTC_V_SETTRANS_PM_PKT
 
 $VAL_RUTA_SPARK \
---conf spark.ui.enabled=false \
+ 
 --conf spark.shuffle.service.enabled=false \
---conf spark.dynamicAllocation.enabled=false \
+
 --master $VAL_MASTER \
 --executor-memory $VAL_EXECUTOR_MEMORY \
 --num-executors $VAL_NUM_EXECUTORS \

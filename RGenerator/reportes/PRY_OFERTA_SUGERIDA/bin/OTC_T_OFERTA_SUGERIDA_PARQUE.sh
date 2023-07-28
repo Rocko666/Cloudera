@@ -229,9 +229,9 @@ echo `date '+%Y-%m-%d %H:%M:%S'`" INFO: Conexion a Oracle: $JDBCURL" 2>&1 &>> $V
 #REALIZA EL LLAMADO EL ARCHIVO SPARK QUE REALIZA LA EXTRACCION DE LA INFORMACION DE ORACLE A HIVE
 
 $VAL_RUTA_SPARK \
---conf spark.ui.enabled=false \
+ 
 --conf spark.shuffle.service.enabled=false \
---conf spark.dynamicAllocation.enabled=false \
+
 --master $VAL_MASTER \
 --name $ENTIDAD \
 --driver-memory $VAL_DRIVER_MEMORY \
@@ -292,9 +292,9 @@ echo " === INICIA PYSPARK EXPORT DE TABLA $TDUSER.$TDTABLA === "`date '+%Y%m%d%H
 
 #EJECUTA PYSPARK EXPORT
 $VAL_RUTA_SPARK \
---conf spark.ui.enabled=false \
+ 
 --conf spark.shuffle.service.enabled=false \
---conf spark.dynamicAllocation.enabled=false \
+
 --master yarn \
 --executor-memory 2G \
 --num-executors 80 \
@@ -360,9 +360,9 @@ echo "La tabla otc_t_rtd_oferta_sugerida contiene $VAL_DATA_OFERTA_SUG registros
 	#REALIZA EL LLAMADO EL ARCHIVO SPARK QUE REALIZA LA EXTRACCION DE LA INFORMACION DE ORACLE A HIVE
 
 $VAL_RUTA_SPARK \
---conf spark.ui.enabled=false \
+ 
 --conf spark.shuffle.service.enabled=false \
---conf spark.dynamicAllocation.enabled=false \
+
 --master $VAL_MASTER \
 --name $ENTIDAD \
 --driver-memory $VAL_DRIVER_MEMORY \
@@ -422,9 +422,9 @@ echo " === INICIA ETAPA $ETAPA EXPORTACION A ORACLE TABLA OTC_T_OFERTA_PREPAGO =
 
 #EJECUTA PYSPARK EXPORT
 $VAL_RUTA_SPARK \
---conf spark.ui.enabled=false \
+ 
 --conf spark.shuffle.service.enabled=false \
---conf spark.dynamicAllocation.enabled=false \
+
 --master yarn \
 --executor-memory 2G \
 --num-executors 80 \

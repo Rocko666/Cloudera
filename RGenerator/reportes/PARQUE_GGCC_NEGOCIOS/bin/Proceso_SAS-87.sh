@@ -159,9 +159,9 @@ fi
 
 # Nueva llamada a pyspark LFLM 12/09/2022 recibe como ruta el nombre del archivo con el nombre .csv la fecha del ultimo dÃ­a del mes
 $VAL_RUTA_SPARK \
---conf spark.ui.enabled=false \
+ 
 --conf spark.shuffle.service.enabled=false \
---conf spark.dynamicAllocation.enabled=false \
+
 --name $ENTIDAD \
 --master $VAL_ETP01_MASTER \
 --driver-memory $VAL_ETP01_DRIVER_MEMORY \
